@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Redirecting…</title>
+<meta name="robots" content="noindex">
+</head>
+<body>
+<p id="msg">Redirecting…</p>
+<noscript>
+  <p>This link requires JavaScript. <a id="fallback" href="#">Click here to continue</a>.</p>
+</noscript>
+
+<script>
+  // ---- CONFIGURE THIS ----
+  var LOGGER_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+  // -------------------------
+
+  var params = new URLSearchParams(window.location.search);
+  var id = params.get("id");
+
+  function showError(text) {
+    document.getElementById("msg").textContent = text;
+  }
+
+  if (!id) {
+    showError("Missing link id.");
+  } else {
+    fetch("links.json", { cache: "no-store" })
+      .then(function (r) { return r.json(); })
+      .then(function (links) {
+        var link = links[id];
+        if (!link) {
+          showError("Link not found.");
+          return;
+        }
+
+        // Fire-and-forget click log. Uses sendBeacon so it doesn't block the redirect.
+        try {
+          var payload = JSON.stringify({
+            id: id,
+            contact: link.contact || "",
+            channel: link.channel || "",
+            url: link.url,
+            referrer: document.referrer || "",
+            ua: navigator.userAgent,
+            t: new Date().toISOString()
+          });
+          if (navigator.sendBeacon && LOGGER_URL.indexOf("PASTE_") === -1) {
+            var blob = new Blob([payload], { type: "text/plain;charset=UTF-8" });
+            navigator.sendBeacon(LOGGER_URL, blob);
+          } else if (LOGGER_URL.indexOf("PASTE_") === -1) {
+            fetch(LOGGER_URL, {
+              method: "POST",
+              mode: "no-cors", // Apps Script web apps don't return CORS headers
+              body: payload
+            }).catch(function () {});
+          }
+        } catch (e) {
+          // never let logging break the redirect
+        }
+
+        // Small delay so sendBeacon reliably fires before navigation in all browsers.
+        setTimeout(function () {
+          window.location.replace(link.url);
+        }, 50);
+      })
+      .catch(function () {
+        showError("Something went wrong.");
+      });
+  }
+</script>
+</body>
+</html>
