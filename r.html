@@ -12,9 +12,7 @@
 </noscript>
 
 <script>
-  // ---- CONFIGURE THIS ----
   var LOGGER_URL = "https://script.google.com/macros/s/AKfycbx8UuEyAglq3P7SiytVKYb6heoMucJ3d40MdzhFr-6DwzvX1rQf3l34jr0pYdrs1V8X/exec";
-  // -------------------------
 
   var params = new URLSearchParams(window.location.search);
   var id = params.get("id");
@@ -35,7 +33,6 @@
           return;
         }
 
-        // Fire-and-forget click log. Uses sendBeacon so it doesn't block the redirect.
         try {
           var payload = JSON.stringify({
             id: id,
@@ -46,24 +43,17 @@
             ua: navigator.userAgent,
             t: new Date().toISOString()
           });
-          if (navigator.sendBeacon && LOGGER_URL.indexOf("PASTE_") === -1) {
-            var blob = new Blob([payload], { type: "text/plain;charset=UTF-8" });
-            navigator.sendBeacon(LOGGER_URL, blob);
-          } else if (LOGGER_URL.indexOf("PASTE_") === -1) {
-            fetch(LOGGER_URL, {
-              method: "POST",
-              mode: "no-cors", // Apps Script web apps don't return CORS headers
-              body: payload
-            }).catch(function () {});
-          }
-        } catch (e) {
-          // never let logging break the redirect
-        }
+          fetch(LOGGER_URL, {
+            method: "POST",
+            mode: "no-cors",
+            keepalive: true,
+            body: payload
+          }).catch(function () {});
+        } catch (e) {}
 
-        // Small delay so sendBeacon reliably fires before navigation in all browsers.
         setTimeout(function () {
           window.location.replace(link.url);
-        }, 50);
+        }, 150);
       })
       .catch(function () {
         showError("Something went wrong.");
