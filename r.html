@@ -21,6 +21,18 @@
     document.getElementById("msg").textContent = text;
   }
 
+  function getIpWithTimeout(timeoutMs) {
+    return Promise.race([
+      fetch("https://api.ipify.org?format=json")
+        .then(function (r) { return r.json(); })
+        .then(function (j) { return j.ip || ""; })
+        .catch(function () { return ""; }),
+      new Promise(function (resolve) {
+        setTimeout(function () { resolve(""); }, timeoutMs);
+      })
+    ]);
+  }
+
   if (!id) {
     showError("Missing link id.");
   } else {
@@ -33,27 +45,28 @@
           return;
         }
 
-        try {
-          var payload = JSON.stringify({
-            id: id,
-            contact: link.contact || "",
-            channel: link.channel || "",
-            url: link.url,
-            referrer: document.referrer || "",
-            ua: navigator.userAgent,
-            t: new Date().toISOString()
-          });
-          fetch(LOGGER_URL, {
-            method: "POST",
-            mode: "no-cors",
-            keepalive: true,
-            body: payload
-          }).catch(function () {});
-        } catch (e) {}
+        getIpWithTimeout(700).then(function (ip) {
+          try {
+            var payload = JSON.stringify({
+              id: id,
+              contact: link.contact || "",
+              channel: link.channel || "",
+              url: link.url,
+              ip: ip,
+              referrer: document.referrer || "",
+              ua: navigator.userAgent,
+              t: new Date().toISOString()
+            });
+            fetch(LOGGER_URL, {
+              method: "POST",
+              mode: "no-cors",
+              keepalive: true,
+              body: payload
+            }).catch(function () {});
+          } catch (e) {}
 
-        setTimeout(function () {
           window.location.replace(link.url);
-        }, 150);
+        });
       })
       .catch(function () {
         showError("Something went wrong.");
