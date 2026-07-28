@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Khafa Mat Ho! Mere Badle Wahan Guldaan Rakh Dena &#128293; Trending Ghazal  | Idrees Azad | Abaad Melodies</title>
+<meta name="robots" content="noindex">
+<meta property="og:title" content="Khafa Mat Ho! Mere Badle Wahan Guldaan Rakh Dena &#128293; Trending Ghazal  | Idrees Azad | Abaad Melodies">
+<meta property="og:description" content="Abaad Melodies">
+<meta property="og:image" content="https://i.ytimg.com/vi/oyynoHMQn80/hqdefault.jpg">
+<meta property="og:type" content="video.other">
+<meta property="og:url" content="https://faysalim.github.io/click/cVWRks.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Khafa Mat Ho! Mere Badle Wahan Guldaan Rakh Dena &#128293; Trending Ghazal  | Idrees Azad | Abaad Melodies">
+<meta name="twitter:image" content="https://i.ytimg.com/vi/oyynoHMQn80/hqdefault.jpg">
+<meta http-equiv="refresh" content="3;url=https://www.youtube.com/watch?v=oyynoHMQn80&amp;list=RDoyynoHMQn80&amp;start_radio=1">
+</head>
+<body>
+<p id="msg">Redirecting…</p>
+<noscript>
+  <p>This link requires JavaScript. <a href="https://www.youtube.com/watch?v=oyynoHMQn80&amp;list=RDoyynoHMQn80&amp;start_radio=1">Click here to continue</a>.</p>
+</noscript>
+
+<script>
+  var LOGGER_URL = "https://script.google.com/macros/s/AKfycbx8UuEyAglq3P7SiytVKYb6heoMucJ3d40MdzhFr-6DwzvX1rQf3l34jr0pYdrs1V8X/exec";
+  var DEST = "https://www.youtube.com/watch?v=oyynoHMQn80&list=RDoyynoHMQn80&start_radio=1";
+
+  function getIpWithTimeout(timeoutMs) {
+    return Promise.race([
+      fetch("https://api.ipify.org?format=json")
+        .then(function (r) { return r.json(); })
+        .then(function (j) { return j.ip || ""; })
+        .catch(function () { return ""; }),
+      new Promise(function (resolve) {
+        setTimeout(function () { resolve(""); }, timeoutMs);
+      })
+    ]);
+  }
+
+  getIpWithTimeout(700).then(function (ip) {
+    try {
+      var payload = JSON.stringify({
+        id: "cVWRks",
+        contact: "Aallee",
+        channel: "whatsapp",
+        url: DEST,
+        ip: ip,
+        referrer: document.referrer || "",
+        ua: navigator.userAgent,
+        t: new Date().toISOString()
+      });
+      fetch(LOGGER_URL, {
+        method: "POST",
+        mode: "no-cors",
+        keepalive: true,
+        body: payload
+      }).catch(function () {});
+    } catch (e) {}
+
+    window.location.replace(DEST);
+  });
+</script>
+</body>
+</html>
